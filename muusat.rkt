@@ -47,14 +47,16 @@
       (painotus . 100))))
 
 (define (alku tilanne)
-  (* (hash-ref tilanne 'aikamittakaava)
-     (+ (hash-ref tilanne 'alku) (hash-ref tilanne 'aikasiirtymä))))
+  (exact-round
+    (* (hash-ref tilanne 'aikamittakaava)
+       (+ (hash-ref tilanne 'alku) (hash-ref tilanne 'aikasiirtymä)))))
 
 (define (loppu tilanne)
-  (* (hash-ref tilanne 'aikamittakaava)
-     (+ (hash-ref tilanne 'alku)
-	(hash-ref tilanne 'pituus)
-	(hash-ref tilanne 'aikasiirtymä))))
+  (exact-round
+    (* (hash-ref tilanne 'aikamittakaava)
+       (+ (hash-ref tilanne 'alku)
+	  (hash-ref tilanne 'pituus)
+	  (hash-ref tilanne 'aikasiirtymä)))))
 
 (define (soitettavissa? tilanne)
   (let ((alku (hash-ref tilanne 'alku)))
