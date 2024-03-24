@@ -11,12 +11,9 @@
 		   (yhdistä-muusat uusi-tilanne (rest muusat))))
       (values lopputilanne (set-union tapahtumat1 tapahtumat2)))))
 
-(define (aloittava-isku? isku)
-  (ormap (lambda (muusa) (or (sävel? muusa) (tauko? muusa))) isku))
-
 (define (aikaa iskut)
   (cond ((empty? iskut) 0)
-	((aloittava-isku? (first iskut)) 0)
+	((ormap aloittaa-nuotin? (first iskut)) 0)
 	(else (add1 (aikaa (rest iskut))))))
 
 (define (sävelmä nimi nopeus iskut)

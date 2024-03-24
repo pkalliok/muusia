@@ -1,13 +1,15 @@
 #lang racket
 
 (require racket/set)
-(provide uus-muus! muusaksi sävel? tauko?
+(provide uus-muus! muusaksi luokassa? aloittaa-nuotin?
 	 iskujen-jako oletustilanne alku loppu soitettavissa?
 	 tapahtuma tapahtuma-hetki teos)
 
 (define muusat (make-hash))
 (define muusattimet (make-hash))
-(define sävelet (mutable-set))
+(define muusien-luokat (make-hash))
+
+(define muusa-luokat (curry hash-ref muusien-luokat))
 
 (define (muusaksi juttu)
   (cond ((procedure? juttu) juttu)
@@ -23,13 +25,20 @@
 	     (apply muusatin (rest osat)))))
 	(else (error "Tuntematon muusa" juttu))))
 
-(define sävel? (curry set-member? sävelet))
-(define tauko? (const #f))
+(define (luokassa? luokka muusa)
+  (or (memq luokka (muusa-luokat muusa '()))
+      (and (list? muusa) (not (empty? muusa))
+	   (memq luokka (muusa-luokat (first muusa) '())))
+      (memq luokka (muusa-luokat
+		     (string->symbol
+		       (first (string-split (symbol->string muusa) ":")))))))
+
+(define (aloittaa-nuotin? muusa) (not (luokassa? 'nuotiton muusa)))
 
 (define (uus-muus! muusa (luokat '()))
   (let ((nimi (object-name muusa)))
     (hash-set! (if (memq 'muusatin luokat) muusattimet muusat) nimi muusa)
-    (when (memq 'sävel luokat) (set-add! sävelet nimi))))
+    (hash-set! muusien-luokat nimi luokat)))
 
 (define iskujen-jako 360)
 
