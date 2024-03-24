@@ -40,5 +40,3 @@
 				(hash-ref tilanne 'painotus))))))))
       nimi)))
 
-(define (test) (teos 'esimerkki (midisoitin 'jousi 0 40)))
-

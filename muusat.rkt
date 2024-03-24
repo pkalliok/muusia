@@ -1,14 +1,28 @@
 #lang racket
 
 (require racket/set)
-(provide uus-muus! iskujen-jako
-	 oletustilanne alku loppu soitettavissa?
+(provide uus-muus! muusaksi sävel? tauko?
+	 iskujen-jako oletustilanne alku loppu soitettavissa?
 	 tapahtuma tapahtuma-hetki teos)
 
 (define muusat (make-hash))
 
+(define (muusaksi juttu)
+  (cond ((procedure? juttu) juttu)
+	((hash-ref muusat juttu #f) => identity)
+	((symbol? juttu)
+	 (let* ((osat (string-split (symbol->string juttu) ":"))
+		(nimi (string->symbol (first osat)))
+		(muusa (hash-ref muusat nimi #f)))
+	   (if muusa (apply muusa (rest osat))
+	     (error "Tuntematon muusa" nimi (rest osat)))))
+	(else (error "Tuntematon muusa" juttu))))
+
+(define (sävel? muusa) #t)
+(define (tauko? muusa) #f)
+
 (define (uus-muus! muusa)
-  (hash-set! (object-name muusa) muusa))
+  (hash-set! muusat (object-name muusa) muusa))
 
 (define iskujen-jako 360)
 
@@ -54,7 +68,7 @@
 (define tapahtuma-priority
   (compose
     (priority-function '("Header" "Start_track" "Title_t" "Tempo"
-			 "Control_c" "Program_c" "Note_off_c" "Note_on_c"
+			 "Note_off_c" "Control_c" "Program_c" "Note_on_c"
 			 "End_track" "End_of_file"))
     caddr))
 
