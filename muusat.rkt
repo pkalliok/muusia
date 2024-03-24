@@ -60,7 +60,7 @@
   (let ((priorities (make-immutable-hash
 		      (map cons priority-list
 			   (range (length priority-list))))))
-    (lambda (item) (hash-ref priorities item))))
+    (curry hash-ref priorities)))
 
 (define (tapahtuma . args) (cons 1 args))
 (define tapahtuma-hetki cadr)

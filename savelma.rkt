@@ -30,7 +30,7 @@
 					 (map muusaksi (first iskut))))
 			((lopputilanne tapahtumat2)
 			 (lähtien (hash-update uusi-tilanne 'alku
-					       (lambda (alku) (+ alku nopeus)))
+					       (curry + nopeus))
 				  (rest iskut))))
 	    (values lopputilanne (set-union tapahtumat1 tapahtumat2))))))
     nimi))
