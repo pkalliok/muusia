@@ -16,9 +16,9 @@
 	(values (hash-update tilanne 'soittimet
 			     (lambda (s) (hash-set s soitin kanava)))
 		kanava
-		(set (tapahtuma (alku tilanne) "Control_c" kanava 0 msb)
-		     (tapahtuma (alku tilanne) "Control_c" kanava 32 lsb)
-		     (tapahtuma (alku tilanne) "Program_c" kanava
+		(set (tapahtuma (alku tilanne) 'Control_c kanava 0 msb)
+		     (tapahtuma (alku tilanne) 'Control_c kanava 32 lsb)
+		     (tapahtuma (alku tilanne) 'Program_c kanava
 				(second soitin))))))))
 
 (define (midisoitin nimi pankki ohjelma)
@@ -32,10 +32,10 @@
 	      uusi-tilanne
 	      (set-union
 		soittimenvaihto
-		(set (tapahtuma (alku tilanne) "Note_on_c" kanava
+		(set (tapahtuma (alku tilanne) 'Note_on_c kanava
 				(hash-ref tilanne 'sävel)
 				(hash-ref tilanne 'painotus))
-		     (tapahtuma (loppu tilanne) "Note_off_c" kanava
+		     (tapahtuma (loppu tilanne) 'Note_off_c kanava
 				(hash-ref tilanne 'sävel)
 				(hash-ref tilanne 'painotus))))))))
       nimi)))

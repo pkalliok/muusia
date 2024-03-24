@@ -67,9 +67,9 @@
 
 (define tapahtuma-priority
   (compose
-    (priority-function '("Header" "Start_track" "Title_t" "Tempo"
-			 "Note_off_c" "Control_c" "Program_c" "Note_on_c"
-			 "End_track" "End_of_file"))
+    (priority-function '(Header Start_track Title_t Tempo
+			 Note_off_c Control_c Program_c Note_on_c
+			 End_track End_of_file))
     caddr))
 
 (define (tapahtuma<? tap1 tap2)
@@ -84,11 +84,11 @@
      ((loppuhetki) (if (empty? tapahtumat) 0
 		     (+ (tapahtuma-hetki (last tapahtumat))
 			(* 6 iskujen-jako)))))
-    `((0 0 "Header" 0 1 ,iskujen-jako)
-      (1 0 "Start_track")
-      (1 0 "Title_t" ,nimi)
-      (1 0 "Tempo" 500000)
+    `((0 0 Header 0 1 ,iskujen-jako)
+      (1 0 Start_track)
+      (1 0 Title_t ,nimi)
+      (1 0 Tempo 500000)
       ,@tapahtumat
-      (1 ,loppuhetki "End_track")
-      (0 0 "End_of_file"))))
+      (1 ,loppuhetki End_track)
+      (0 0 End_of_file))))
 
