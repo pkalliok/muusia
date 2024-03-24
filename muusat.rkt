@@ -52,7 +52,8 @@
       (soitin . ,(lambda (tilanne) (values tilanne (set))))
       (keskeytykset . ())
       (soittimet . #hash())
-      (sävel . 64)
+      (sävelpohja . 64)
+      (sävel . (c))
       (painotus . 100))))
 
 (define (alku tilanne)

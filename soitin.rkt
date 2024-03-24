@@ -1,8 +1,8 @@
 #lang racket
 
 (require racket/set)
-(require "muusat.rkt")
-(provide midisoitin)
+(require "muusat.rkt" "savel.rkt")
+(provide midisoitin luo-vaihda-soitin!)
 
 (define (varaa-kanava tilanne soitin)
   (let ((soittimet (hash-ref tilanne 'soittimet)))
@@ -27,16 +27,25 @@
       (lambda (tilanne)
 	(if (not (soitettavissa? tilanne)) (values tilanne (set))
 	  (let-values (((uusi-tilanne kanava soittimenvaihto)
-			(varaa-kanava tilanne soitin)))
+			(varaa-kanava tilanne soitin))
+		       ((sävelarvo) (tilanne->midikorkeus tilanne))
+		       ((paino) (hash-ref tilanne 'painotus)))
 	    (values
 	      uusi-tilanne
 	      (set-union
 		soittimenvaihto
-		(set (tapahtuma (alku tilanne) 'Note_on_c kanava
-				(hash-ref tilanne 'sävel)
-				(hash-ref tilanne 'painotus))
-		     (tapahtuma (loppu tilanne) 'Note_off_c kanava
-				(hash-ref tilanne 'sävel)
-				(hash-ref tilanne 'painotus))))))))
+		(set (tapahtuma (alku tilanne)
+				'Note_on_c kanava sävelarvo paino)
+		     (tapahtuma (loppu tilanne)
+				'Note_off_c kanava sävelarvo paino)))))))
       nimi)))
+
+(define (soitin s)
+  (procedure-rename
+    (lambda (tilanne)
+      (values (hash-set tilanne 'soitin s) (set)))
+    (string->symbol (string-append "soitin:" (symbol->string s)))))
+
+(define (luo-vaihda-soitin!)
+  (uus-muus! soitin '(nuotiton muusatin)))
 
