@@ -86,7 +86,7 @@
       (and (= (tapahtuma-hetki tap1) (tapahtuma-hetki tap2))
 	   (< (tapahtuma-priority tap1) (tapahtuma-priority tap2)))))
 
-(define (teos nimi sisältö)
+(define (teos sisältö)
   (let*-values
     (((_ tapahtumajoukko) (sisältö oletustilanne))
      ((tapahtumat) (sort (set->list tapahtumajoukko) tapahtuma<?))
@@ -95,7 +95,7 @@
 			(* 6 iskujen-jako)))))
     `((0 0 Header 0 1 ,iskujen-jako)
       (1 0 Start_track)
-      (1 0 Title_t ,nimi)
+      (1 0 Title_t ,(object-name sisältö))
       (1 0 Tempo 500000)
       ,@tapahtumat
       (1 ,loppuhetki End_track)
