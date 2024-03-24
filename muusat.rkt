@@ -6,23 +6,30 @@
 	 tapahtuma tapahtuma-hetki teos)
 
 (define muusat (make-hash))
+(define muusattimet (make-hash))
+(define sävelet (mutable-set))
 
 (define (muusaksi juttu)
   (cond ((procedure? juttu) juttu)
 	((hash-ref muusat juttu #f) => identity)
+	((and (list? juttu) (not (empty? juttu))
+	      (hash-ref muusattimet (first juttu) #f))
+	 => (lambda (muusatin) (apply muusatin (rest juttu))))
 	((symbol? juttu)
 	 (let* ((osat (string-split (symbol->string juttu) ":"))
 		(nimi (string->symbol (first osat)))
-		(muusa (hash-ref muusat nimi #f)))
-	   (if muusa (apply muusa (rest osat))
-	     (error "Tuntematon muusa" nimi (rest osat)))))
+		(muusatin (hash-ref muusattimet nimi #f)))
+	   (if (not muusatin) (error "Tuntematon muusatin" nimi)
+	     (apply muusatin (rest osat)))))
 	(else (error "Tuntematon muusa" juttu))))
 
-(define (sävel? muusa) #t)
-(define (tauko? muusa) #f)
+(define sävel? (curry set-member? sävelet))
+(define tauko? (const #f))
 
-(define (uus-muus! muusa)
-  (hash-set! muusat (object-name muusa) muusa))
+(define (uus-muus! muusa (luokat '()))
+  (let ((nimi (object-name muusa)))
+    (hash-set! (if (memq 'muusatin luokat) muusattimet muusat) nimi muusa)
+    (when (memq 'sävel luokat) (set-add! sävelet nimi))))
 
 (define iskujen-jako 360)
 
