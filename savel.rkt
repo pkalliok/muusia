@@ -13,11 +13,13 @@
   (curry hash-ref #hash(("=" . 0) ("#" . 1) ("b" . -1)
 				  ("+" . 12) ("-" . -12))))
 
+(define sum (curry foldl + 0))
+
 (define (tilanne->midikorkeus tilanne)
   (let ((sävel (hash-ref tilanne 'sävel)))
     (+ (hash-ref tilanne 'sävelpohja)
        (hash-ref pohjat (first sävel))
-       (foldl + 0 (map muunne->puolisävelaskeleet (rest sävel))))))
+       (sum (map muunne->puolisävelaskeleet (rest sävel))))))
 
 (define (sävel pohja muunteet)
   (procedure-rename
